@@ -34,12 +34,14 @@ class Logger(object):
         if not client.indices.exists(index=self.index_name):
             client.indices.create(index=self.index_name)
 
-    def log(self, level, message):
+    def log(self, level, message, status_code=200, user_role="normal_user"):
         log_entry = {
             'timestamp': datetime.now(timezone_br).isoformat(),
             'level': level,
             'message': message,
-            'app_name': self.app_name
+            'app_name': self.app_name,
+            'status_code': status_code,
+            'user_role': user_role
         }
         # Enviando o log para o OpenSearch
         response = client.index(
@@ -52,4 +54,4 @@ class Logger(object):
 
 if __name__ == '__main__':
     logger = Logger(index_name='python-logs', app_name='my-python-app')
-    logger.log(level='info', message='Hello World from OpenSearch!')
+    logger.log(level='info', message='Updating database table from admin account!', status_code=200, user_role="admin")
